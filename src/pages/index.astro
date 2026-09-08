@@ -215,8 +215,9 @@ const homepageSchema = JSON.stringify({
       </div>
       <div class="max-w-3xl mx-auto rounded-xl overflow-hidden shadow-lg border border-gray-200 bg-black aspect-video">
         <iframe
+          id="lcp-youtube-player"
           class="w-full h-full"
-          src="https://www.youtube.com/embed/okH6_e21bY4"
+          src="https://www.youtube.com/embed/okH6_e21bY4?rel=0&modestbranding=1&enablejsapi=1"
           title="Learn About Life Care Planning"
           frameborder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -225,6 +226,29 @@ const homepageSchema = JSON.stringify({
         ></iframe>
       </div>
     </section>
+
+    <script is:inline>
+      var tag = document.createElement('script');
+      tag.src = "https://www.youtube.com/iframe_api";
+      var firstScriptTag = document.getElementsByTagName('script')[0];
+      if (firstScriptTag && firstScriptTag.parentNode) {
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+      }
+
+      var lcpPlayer;
+      window.onYouTubeIframeAPIReady = function() {
+        lcpPlayer = new YT.Player('lcp-youtube-player', {
+          events: {
+            'onStateChange': function(event) {
+              if (event.data === 0) { // 0 = YT.PlayerState.ENDED
+                lcpPlayer.seekTo(0);
+                lcpPlayer.pauseVideo();
+              }
+            }
+          }
+        });
+      };
+    </script>
 
     <!-- Maps section -->
     <section class="bg-gray-50">
