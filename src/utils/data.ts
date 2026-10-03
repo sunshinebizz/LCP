@@ -1,10 +1,13 @@
 import type { Provider } from "../types/provider";
 import rawData from "../data/providers.json";
+import { jurisdictions } from "../data/jurisdictions";
 
 const providers: Provider[] = rawData?.providers ?? [];
 
 export function getAllStates(): string[] {
-  return Array.from(new Set(providers.map((p) => p.state))).sort();
+  const jurisdictionSlugs = jurisdictions ? Object.keys(jurisdictions) : [];
+  const providerStates = (providers || []).map((p) => p.state);
+  return Array.from(new Set([...jurisdictionSlugs, ...providerStates])).sort();
 }
 
 export function getStatesByCountry(country: string): string[] {
@@ -36,7 +39,13 @@ export function getProviderBySlug(slug: string): Provider | undefined {
 }
 
 export function getStateName(stateSlug: string): string {
-  return providers.find((p) => p.state === stateSlug)?.state ?? stateSlug;
+  if (jurisdictions[stateSlug]) {
+    return jurisdictions[stateSlug].name;
+  }
+  return stateSlug
+    .split("-")
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+    .join(" ");
 }
 
 export function getCityName(citySlug: string): string {

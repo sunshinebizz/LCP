@@ -19,11 +19,22 @@ const schema = JSON.stringify({
       "datePublished": "2024-01-01",
       "dateModified": "2026-08-18",
       "publisher": { "@id": "https://www.mylifecareplanning.com/#organization" },
-      "author": {
-        "@type": "Organization",
-        "name": "Physician Life Care Planning Directory",
-        "url": "https://www.mylifecareplanning.com/"
-      }
+      "author": { "@id": "https://www.mylifecareplanning.com/#organization" }
+    },
+    {
+      "@type": ["Organization", "MedicalBusiness"],
+      "@id": "https://www.mylifecareplanning.com/#organization",
+      "name": "MyLifeCarePlanning",
+      "alternateName": "Physician Life Care Planning Directory",
+      "url": "https://www.mylifecareplanning.com/",
+      "logo": "https://www.mylifecareplanning.com/LCP-logo-transparent.png",
+      "sameAs": [
+        "https://www.linkedin.com/company/mylifecareplanning-com",
+        "https://www.youtube.com/@MyLifeCarePlanning",
+        "https://x.com/MylifeCarePlan",
+        "https://www.facebook.com/Mylifecareplanning"
+      ],
+      "medicalSpecialty": "PhysicalMedicineAndRehabilitation"
     },
     {
       "@type": "BreadcrumbList",

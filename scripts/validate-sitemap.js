@@ -59,7 +59,12 @@ staticPages.forEach(page => {
   expectedUrls.add(`https://www.mylifecareplanning.com${page}`);
 });
 
-// Dynamic provider routes
+// All jurisdiction hubs
+const jurisdictionsFile = fs.readFileSync(path.join(__dirname, '../src/data/jurisdictions.ts'), 'utf8');
+const stateSlugMatches = jurisdictionsFile.matchAll(/slug:\s*['"]([a-z0-9-]+)['"]/g);
+for (const match of stateSlugMatches) {
+  expectedUrls.add(`https://www.mylifecareplanning.com/physician-life-care-planners/${match[1]}/`);
+}
 providers.forEach(p => {
   if (p.state && p.city && p.slug) {
     expectedUrls.add(`https://www.mylifecareplanning.com/physician-life-care-planners/${p.state}/`);

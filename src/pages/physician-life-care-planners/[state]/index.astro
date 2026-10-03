@@ -4,14 +4,17 @@ import Header from "../../../components/Header.astro";
 import Footer from "../../../components/Footer.astro";
 import Breadcrumb from "../../../components/Breadcrumb.astro";
 import SponsoredBanner from "../../../components/SponsoredBanner.astro";
-import { getAllStates, getCitiesByState, getProviderCountByCity, getPhysicianCountByCity } from "../../../utils/data";
+import { getAllStates, getCitiesByState, getProviderCountByCity, getPhysicianCountByCity, getProvidersByState } from "../../../utils/data";
+import { getJurisdiction } from "../../../data/jurisdictions";
+
 export function getStaticPaths() {
   return getAllStates().map((state) => ({ params: { state } }));
 }
 
 const { state } = Astro.params;
+const jurisdiction = state ? getJurisdiction(state) : undefined;
 
-const stateDisplay = state!
+const stateDisplay = jurisdiction?.name ?? state!
   .split("-")
   .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
   .join(" ");
@@ -23,7 +26,18 @@ const cities = getCitiesByState(state!).map((city) => ({
   displayName: city.split("-").map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(" "),
 }));
 
+const stateProviders = getProvidersByState(state!);
+const totalProvidersInState = stateProviders.length;
+
 const topCities = getCitiesByState(state!).slice(0, 4);
+const majorCitiesList = jurisdiction?.majorCities?.length 
+  ? jurisdiction.majorCities.slice(0, 4).join(", ")
+  : (topCities.map(c => c.split("-").map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(" ")).join(", ") || stateDisplay);
+
+const schemaCities = topCities.length > 0 
+  ? topCities.map(c => c.split("-").map((w: string) => w.charAt(0).toUpperCase() + w.slice(1)).join(" "))
+  : (jurisdiction?.majorCities ?? [stateDisplay]);
+
 const stateSchema = JSON.stringify({
   "@context": "https://schema.org",
   "@graph": [
@@ -32,15 +46,15 @@ const stateSchema = JSON.stringify({
       "@id": `https://www.mylifecareplanning.com/physician-life-care-planners/${state}/#webpage`,
       "url": `https://www.mylifecareplanning.com/physician-life-care-planners/${state}/`,
       "name": `${stateDisplay} Physician Life Care Planners`,
-      "description": `Directory of board-certified physician life care planners in ${stateDisplay} for personal injury and insurance claims.`,
+      "description": `Directory of board-certified physician life care planners in ${stateDisplay} for personal injury, medical malpractice, and catastrophic claims.`,
       "isPartOf": {"@id": "https://www.mylifecareplanning.com/#website"},
       "publisher": {"@id": "https://www.mylifecareplanning.com/#organization"},
       "areaServed": {
         "@type": "AdministrativeArea",
         "name": stateDisplay,
-        "containsPlace": topCities.map(c => ({
+        "containsPlace": schemaCities.map(cityName => ({
           "@type": "City",
-          "name": c.split("-").map((w: string) => w.charAt(0).toUpperCase() + w.slice(1)).join(" ")
+          "name": cityName
         }))
       }
     },
@@ -57,10 +71,18 @@ const stateSchema = JSON.stringify({
       "mainEntity": [
         {
           "@type": "Question",
-          "name": `How many physician life care planners are in ${stateDisplay}?`,
+          "name": `How do Physician Life Care Planners assist in ${stateDisplay} litigation?`,
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": `This directory lists board-certified physician life care planners practicing in ${stateDisplay}. Browse the listings above for current availability.`
+            "text": `In ${stateDisplay}, Physician Life Care Planners evaluate catastrophic medical records, formulate future medical cost projections, and provide expert witness testimony complying with ${jurisdiction?.evidentiaryStandard || "court evidentiary standards"}.`
+          }
+        },
+        {
+          "@type": "Question",
+          "name": `What legal evidentiary standard applies to life care plans in ${stateDisplay}?`,
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": `${stateDisplay} courts evaluate expert witness medical opinions under the ${jurisdiction?.evidentiaryStandard || "Daubert standard"} (${jurisdiction?.standardRuleRef || "Rule 702"}), requiring reliable clinical methodology and objective documentation.`
           }
         }
       ]
@@ -71,7 +93,7 @@ const stateSchema = JSON.stringify({
 
 <BaseLayout
   title={`${stateDisplay} Physician Life Care Planners | PM&R Medical Experts | LCP Directory`}
-  description={`Find certified Physician Life Care Planners in ${stateDisplay}. PM&R physician experts for personal injury and insurance claims.`}
+  description={`Find certified Physician Life Care Planners in ${stateDisplay}. PM&R physician experts for personal injury and insurance claims across ${majorCitiesList}.`}
   canonical={`https://www.mylifecareplanning.com/physician-life-care-planners/${state}/`}
   schema={stateSchema}
 >
@@ -82,35 +104,77 @@ const stateSchema = JSON.stringify({
       <Breadcrumb
         links={[
           { label: "Home", href: "/" },
+          { label: "Physician Life Care Planners", href: "/physician-life-care-planners" },
           { label: stateDisplay, href: `/physician-life-care-planners/${state}` },
         ]}
       />
 
+      <!-- Standardized State Page Header -->
       <h1 class="text-3xl font-bold text-gray-900 mb-2">
-        Life Care Planners in {stateDisplay}
+        {stateDisplay} Physician Life Care Planners
       </h1>
-      <p class="text-gray-600 mb-6">
-        Find qualified Life Care Planners in major metropolitan areas across {stateDisplay}.
-      </p>
+
+      <!-- AEO Answer Capsule (Clean, compact subtitle) -->
+      <div class="aeo-answer-capsule text-sm sm:text-base text-gray-600 max-w-3xl mb-3 leading-relaxed">
+        <p>
+          <strong>{stateDisplay} Physician Life Care Planners</strong> provide objective, court-admissible life care plans, future medical cost projections, and expert witness testimony for catastrophic personal injury, medical malpractice, and workers' compensation litigation across {majorCitiesList} and statewide jurisdictions.
+        </p>
+      </div>
+
+      <!-- Compact Legal Evidentiary Standard Badge -->
+      {jurisdiction?.evidentiaryStandard && (
+        <div class="inline-flex items-center gap-2 text-xs text-gray-600 bg-gray-100 border border-gray-200 px-3 py-1 rounded-full mb-6">
+          <span class="w-1.5 h-1.5 rounded-full bg-brand-600"></span>
+          <span><strong>Court Evidentiary Standard:</strong> {jurisdiction.evidentiaryStandard} ({jurisdiction.standardRuleRef})</span>
+        </div>
+      )}
 
       <SponsoredBanner />
 
-      <div class="mb-8">
-        <h2 class="text-xl font-semibold text-gray-900 mb-4">Select a City</h2>
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
-          {cities.map(({ name, count, physicianCount, displayName }) => (
-            <a
-              href={`/physician-life-care-planners/${state}/${name}`}
-              class="card p-4 hover:border-brand-400 transition-colors group flex items-center justify-between"
-            >
-              <span class="font-medium text-gray-800 group-hover:text-brand-700 transition-colors">{displayName}</span>
-              <span class="text-xs bg-brand-50 text-brand-700 px-2 py-0.5 rounded-full font-medium">
-                {count} LCP{count !== 1 ? "s" : ""}{physicianCount > 0 ? ` (${physicianCount} Physician)` : ""}
-              </span>
-            </a>
-          ))}
+      <!-- City Hubs Section -->
+      {cities.length > 0 ? (
+        <div class="mb-10">
+          <h2 class="text-xl font-semibold text-gray-900 mb-4">Select a City in {stateDisplay}</h2>
+          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+            {cities.map(({ name, count, physicianCount, displayName }) => (
+              <a
+                href={`/physician-life-care-planners/${state}/${name}`}
+                class="card p-4 hover:border-brand-400 transition-colors group flex items-center justify-between"
+              >
+                <span class="font-medium text-gray-800 group-hover:text-brand-700 transition-colors">{displayName}</span>
+                <span class="text-xs bg-brand-50 text-brand-700 px-2 py-0.5 rounded-full font-medium">
+                  {count} LCP{count !== 1 ? "s" : ""}{physicianCount > 0 ? ` (${physicianCount} Physician)` : ""}
+                </span>
+              </a>
+            ))}
+          </div>
         </div>
-      </div>
+      ) : (
+        <div class="bg-gray-50 border border-gray-200 rounded-xl p-6 sm:p-8 text-center mb-10">
+          <div class="w-12 h-12 bg-brand-100 text-brand-700 rounded-full flex items-center justify-center mx-auto mb-3">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+            </svg>
+          </div>
+          <h2 class="text-xl font-bold text-gray-900 mb-2">Statewide & Regional Expert Witness Services in {stateDisplay}</h2>
+          <p class="text-sm text-gray-600 max-w-2xl mx-auto mb-5 leading-relaxed">
+            Board-certified Physician Life Care Planners provide comprehensive medical record analysis, tele-rehabilitation evaluations, independent medical evaluations (IMEs), and in-person deposition and trial testimony throughout {stateDisplay}, including major metropolitan centers.
+          </p>
+          <div class="flex flex-wrap justify-center gap-2 mb-6">
+            {jurisdiction?.majorCities?.map((cityName) => (
+              <span class="inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-semibold bg-white border border-gray-200 text-gray-700 shadow-sm">
+                {cityName} Metro
+              </span>
+            ))}
+          </div>
+          <a
+            href={`/contact?state=${encodeURIComponent(stateDisplay)}`}
+            class="inline-flex items-center gap-2 bg-brand-700 text-white text-sm font-semibold px-6 py-3 rounded-lg hover:bg-brand-800 transition-colors shadow-sm"
+          >
+            Request a {stateDisplay} Life Care Plan Consultation
+          </a>
+        </div>
+      )}
 
       <div class="mt-8 text-center">
         <a href="/physician-life-care-planners" class="inline-flex items-center gap-2 text-brand-700 font-medium hover:text-brand-900 transition-colors">

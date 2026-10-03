@@ -16,13 +16,19 @@ const homepageSchema = JSON.stringify({
   "@context": "https://schema.org",
   "@graph": [
     {
-      "@type": "Organization",
+      "@type": ["Organization", "MedicalBusiness"],
       "@id": "https://www.mylifecareplanning.com/#organization",
-      "name": "Physician Life Care Planning Directory",
-      "alternateName": "MyLifeCarePlanning.com",
+      "name": "MyLifeCarePlanning",
+      "alternateName": "Physician Life Care Planning Directory",
       "url": "https://www.mylifecareplanning.com/",
       "logo": "https://www.mylifecareplanning.com/LCP-logo-transparent.png",
-      "sameAs": ["https://www.mylifecareplanning.com/"],
+      "sameAs": [
+        "https://www.linkedin.com/company/mylifecareplanning-com",
+        "https://www.youtube.com/@MyLifeCarePlanning",
+        "https://x.com/MylifeCarePlan",
+        "https://www.facebook.com/Mylifecareplanning"
+      ],
+      "medicalSpecialty": "PhysicalMedicineAndRehabilitation",
       "contactPoint": {
         "@type": "ContactPoint",
         "contactType": "customer service",
