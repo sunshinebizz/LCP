@@ -8,8 +8,8 @@ export function indexNow() {
     hooks: {
       'astro:build:done': async ({ dir, pages }) => {
         const key = '79d7fba2-21e6-41f4-81f3-9157fb02d980';
-        const keyLocation = `https://www.mylifecareplanning.com/${key}.txt`;
-        const host = 'www.mylifecareplanning.com';
+        const keyLocation = `https://mylifecareplanning.com/${key}.txt`;
+        const host = 'mylifecareplanning.com';
         
         // Build URL list from pages (limit to 10,000 URLs per request)
         const urls = pages

@@ -56,20 +56,20 @@ const staticPages = [
 ];
 
 staticPages.forEach(page => {
-  expectedUrls.add(`https://www.mylifecareplanning.com${page}`);
+  expectedUrls.add(`https://mylifecareplanning.com${page}`);
 });
 
 // All jurisdiction hubs
 const jurisdictionsFile = fs.readFileSync(path.join(__dirname, '../src/data/jurisdictions.ts'), 'utf8');
 const stateSlugMatches = jurisdictionsFile.matchAll(/slug:\s*['"]([a-z0-9-]+)['"]/g);
 for (const match of stateSlugMatches) {
-  expectedUrls.add(`https://www.mylifecareplanning.com/physician-life-care-planners/${match[1]}/`);
+  expectedUrls.add(`https://mylifecareplanning.com/physician-life-care-planners/${match[1]}/`);
 }
 providers.forEach(p => {
   if (p.state && p.city && p.slug) {
-    expectedUrls.add(`https://www.mylifecareplanning.com/physician-life-care-planners/${p.state}/`);
-    expectedUrls.add(`https://www.mylifecareplanning.com/physician-life-care-planners/${p.state}/${p.city}/`);
-    expectedUrls.add(`https://www.mylifecareplanning.com/physician-life-care-planners/${p.state}/${p.city}/${p.slug}/`);
+    expectedUrls.add(`https://mylifecareplanning.com/physician-life-care-planners/${p.state}/`);
+    expectedUrls.add(`https://mylifecareplanning.com/physician-life-care-planners/${p.state}/${p.city}/`);
+    expectedUrls.add(`https://mylifecareplanning.com/physician-life-care-planners/${p.state}/${p.city}/${p.slug}/`);
   }
 });
 

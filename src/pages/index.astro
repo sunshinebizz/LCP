@@ -17,11 +17,11 @@ const homepageSchema = JSON.stringify({
   "@graph": [
     {
       "@type": ["Organization", "MedicalBusiness"],
-      "@id": "https://www.mylifecareplanning.com/#organization",
+      "@id": "https://mylifecareplanning.com/#organization",
       "name": "MyLifeCarePlanning",
       "alternateName": "Physician Life Care Planning Directory",
-      "url": "https://www.mylifecareplanning.com/",
-      "logo": "https://www.mylifecareplanning.com/LCP-logo-transparent.png",
+      "url": "https://mylifecareplanning.com/",
+      "logo": "https://mylifecareplanning.com/LCP-logo-transparent.png",
       "sameAs": [
         "https://www.linkedin.com/company/mylifecareplanning-com",
         "https://www.youtube.com/@MyLifeCarePlanning",
@@ -38,32 +38,32 @@ const homepageSchema = JSON.stringify({
     },
     {
       "@type": "WebSite",
-      "@id": "https://www.mylifecareplanning.com/#website",
-      "url": "https://www.mylifecareplanning.com/",
+      "@id": "https://mylifecareplanning.com/#website",
+      "url": "https://mylifecareplanning.com/",
       "name": "Physician Life Care Planning Directory",
-      "publisher": {"@id": "https://www.mylifecareplanning.com/#organization"}
+      "publisher": {"@id": "https://mylifecareplanning.com/#organization"}
     },
     {
       "@type": "ImageObject",
-      "@id": "https://www.mylifecareplanning.com/#heroimage",
-      "url": "https://www.mylifecareplanning.com/images/hero-medical.webp",
-      "contentUrl": "https://www.mylifecareplanning.com/images/hero-medical.webp",
+      "@id": "https://mylifecareplanning.com/#heroimage",
+      "url": "https://mylifecareplanning.com/images/hero-medical.webp",
+      "contentUrl": "https://mylifecareplanning.com/images/hero-medical.webp",
       "width": "1200",
       "height": "798",
       "caption": "Medical professional reviewing documents",
-      "license": "https://www.mylifecareplanning.com/image-license",
-      "acquireLicensePage": "https://www.mylifecareplanning.com/image-license"
+      "license": "https://mylifecareplanning.com/image-license",
+      "acquireLicensePage": "https://mylifecareplanning.com/image-license"
     },
     {
       "@type": "BreadcrumbList",
-      "@id": "https://www.mylifecareplanning.com/#breadcrumb",
+      "@id": "https://mylifecareplanning.com/#breadcrumb",
       "itemListElement": [
-        {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.mylifecareplanning.com/"}
+        {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://mylifecareplanning.com/"}
       ]
     },
     {
       "@type": "FAQPage",
-      "@id": "https://www.mylifecareplanning.com/#faq",
+      "@id": "https://mylifecareplanning.com/#faq",
       "mainEntity": [
         {
           "@type": "Question",
@@ -93,7 +93,7 @@ const homepageSchema = JSON.stringify({
     },
     {
       "@type": "VideoObject",
-      "@id": "https://www.mylifecareplanning.com/#video",
+      "@id": "https://mylifecareplanning.com/#video",
       "name": "Learn About Life Care Planning",
       "description": "Short overview explaining what Physician Life Care Planners do, their medical-legal methodology, and why objective future care projections matter.",
       "thumbnailUrl": [
@@ -110,7 +110,7 @@ const homepageSchema = JSON.stringify({
 <BaseLayout
   title="Physician Life Care Planners Directory | Expert Medical-Legal Life Care Planning"
   description="Directory of board-certified Physician Life Care Planners (PM&R). Find vetted medical-legal experts for personal injury, medical malpractice, and catastrophic claim valuations."
-  canonical="https://www.mylifecareplanning.com/"
+  canonical="https://mylifecareplanning.com/"
   schema={homepageSchema}
 >
   <Header />

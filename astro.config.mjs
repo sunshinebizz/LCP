@@ -6,7 +6,7 @@ import { validateSitemapIntegration } from "./integrations/sitemap-validator.js"
 
 export default defineConfig({
   output: "static",
-  site: "https://www.mylifecareplanning.com",
+  site: "https://mylifecareplanning.com",
   integrations: [
     tailwind(),
     sitemap({

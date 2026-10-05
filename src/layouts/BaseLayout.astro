@@ -15,7 +15,7 @@ import "@fontsource/inter/700.css";
 import Footer from "../components/Footer.astro";
 
 const { title, description, hidePlatformBanner = false, canonical, schema, image } = Astro.props;
-const siteUrl = "https://www.mylifecareplanning.com";
+const siteUrl = "https://mylifecareplanning.com";
 const pageUrl = canonical || (Astro.url.href.startsWith("http") ? Astro.url.href : `${siteUrl}${Astro.url.pathname}`);
 const ogImageUrl = image || `${siteUrl}/og-image.png`;
 ---
@@ -70,8 +70,6 @@ const ogImageUrl = image || `${siteUrl}/og-image.png`;
   </head>
   <body class="min-h-screen flex flex-col">
     <slot />
-    <!-- Metricool Tracking Pixel -->
-    <img src="https://tracker.metricool.com/c3po.jpg?hash=e3992c56f278dc28435a36dc94f39eee" alt="" aria-hidden="true" style="display:none;" />
   </body>
 </html>
 
