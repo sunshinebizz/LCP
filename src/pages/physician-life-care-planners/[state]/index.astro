@@ -13,6 +13,7 @@ export function getStaticPaths() {
 
 const { state } = Astro.params;
 const jurisdiction = state ? getJurisdiction(state) : undefined;
+const isCanada = jurisdiction?.country === "Canada";
 
 const stateDisplay = jurisdiction?.name ?? state!
   .split("-")
@@ -38,6 +39,14 @@ const schemaCities = topCities.length > 0
   ? topCities.map(c => c.split("-").map((w: string) => w.charAt(0).toUpperCase() + w.slice(1)).join(" "))
   : (jurisdiction?.majorCities ?? [stateDisplay]);
 
+const pageTitle = isCanada
+  ? `${stateDisplay} Physician Life Care Planners | Catastrophic Injury Experts`
+  : `${stateDisplay} Physician Life Care Planners | PM&R Medical Experts | LCP Directory`;
+
+const pageDescription = isCanada
+  ? `Connect with verified physician life care planners serving ${stateDisplay} including ${majorCitiesList}. Objective future care cost valuations for Canadian legal claims.`
+  : `Find certified Physician Life Care Planners in ${stateDisplay}. PM&R physician experts for personal injury and insurance claims across ${majorCitiesList}.`;
+
 const stateSchema = JSON.stringify({
   "@context": "https://schema.org",
   "@graph": [
@@ -46,12 +55,15 @@ const stateSchema = JSON.stringify({
       "@id": `https://www.mylifecareplanning.com/physician-life-care-planners/${state}/#webpage`,
       "url": `https://www.mylifecareplanning.com/physician-life-care-planners/${state}/`,
       "name": `${stateDisplay} Physician Life Care Planners`,
-      "description": `Directory of board-certified physician life care planners in ${stateDisplay} for personal injury, medical malpractice, and catastrophic claims.`,
+      "description": isCanada
+        ? `Directory of board-certified physician life care planners serving ${stateDisplay} for catastrophic injury, cross-border tort claims, and private medical cost quantification.`
+        : `Directory of board-certified physician life care planners in ${stateDisplay} for personal injury, medical malpractice, and catastrophic claims.`,
       "isPartOf": {"@id": "https://www.mylifecareplanning.com/#website"},
       "publisher": {"@id": "https://www.mylifecareplanning.com/#organization"},
       "areaServed": {
         "@type": "AdministrativeArea",
         "name": stateDisplay,
+        ...(jurisdiction?.wikipediaUrl ? { "sameAs": jurisdiction.wikipediaUrl } : {}),
         "containsPlace": schemaCities.map(cityName => ({
           "@type": "City",
           "name": cityName
@@ -68,7 +80,24 @@ const stateSchema = JSON.stringify({
     },
     {
       "@type": "FAQPage",
-      "mainEntity": [
+      "mainEntity": isCanada ? [
+        {
+          "@type": "Question",
+          "name": `How do Physician Life Care Planners assist in ${stateDisplay} litigation?`,
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": `In ${stateDisplay}, Physician Life Care Planners evaluate catastrophic medical records, quantify private healthcare costs not covered by provincial health plans, and provide expert witness reports complying with the Supreme Court of Canada Mohan threshold and provincial court rules.`
+          }
+        },
+        {
+          "@type": "Question",
+          "name": `What evidentiary standard governs life care plans in ${stateDisplay}?`,
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": `${stateDisplay} courts evaluate expert witness medical opinions under the Canadian Mohan standard (${jurisdiction?.standardRuleRef || "Provincial Rules of Court"}), demanding impartial, clinically substantiated projections of lifetime care needs outside public health coverage.`
+          }
+        }
+      ] : [
         {
           "@type": "Question",
           "name": `How do Physician Life Care Planners assist in ${stateDisplay} litigation?`,
@@ -92,8 +121,8 @@ const stateSchema = JSON.stringify({
 ---
 
 <BaseLayout
-  title={`${stateDisplay} Physician Life Care Planners | PM&R Medical Experts | LCP Directory`}
-  description={`Find certified Physician Life Care Planners in ${stateDisplay}. PM&R physician experts for personal injury and insurance claims across ${majorCitiesList}.`}
+  title={pageTitle}
+  description={pageDescription}
   canonical={`https://www.mylifecareplanning.com/physician-life-care-planners/${state}/`}
   schema={stateSchema}
 >
@@ -117,7 +146,7 @@ const stateSchema = JSON.stringify({
       <!-- AEO Answer Capsule (Clean, compact subtitle) -->
       <div class="aeo-answer-capsule text-sm sm:text-base text-gray-600 max-w-3xl mb-3 leading-relaxed">
         <p>
-          <strong>{stateDisplay} Physician Life Care Planners</strong> provide objective, court-admissible life care plans, future medical cost projections, and expert witness testimony for catastrophic personal injury, medical malpractice, and workers' compensation litigation across {majorCitiesList} and statewide jurisdictions.
+          Board-certified physician life care plans and expert witness testimony for catastrophic injury litigation across <strong>{stateDisplay}</strong>{isCanada ? " and Canadian jurisdictions." : " and statewide jurisdictions."}
         </p>
       </div>
 
@@ -129,12 +158,72 @@ const stateSchema = JSON.stringify({
         </div>
       )}
 
+      <!-- Canadian Healthcare & Evidentiary Standard Context (Collapsible Accordion Drawer - Option 2) -->
+      {isCanada && (
+        <details class="group bg-white border border-gray-200 rounded-xl mb-6 shadow-sm overflow-hidden transition-all">
+          <summary class="flex items-center justify-between p-4 cursor-pointer select-none hover:bg-gray-50 transition-colors list-none">
+            <div class="flex items-center gap-2.5">
+              <span class="w-6 h-6 rounded-full bg-brand-50 text-brand-700 flex items-center justify-center text-xs font-bold">ℹ</span>
+              <span class="text-sm font-semibold text-gray-900">
+                Canadian Healthcare & Evidentiary Guidelines ({stateDisplay})
+              </span>
+              <span class="hidden sm:inline text-xs text-gray-500">
+                — Mohan standard & private care cost scope
+              </span>
+            </div>
+            <span class="text-xs font-medium text-brand-700 flex items-center gap-1 group-open:rotate-180 transition-transform duration-200">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
+              </svg>
+            </span>
+          </summary>
+
+          <div class="p-5 sm:p-6 border-t border-gray-100 bg-gray-50/50 space-y-5 text-sm">
+            <div>
+              <h2 class="text-base font-bold text-gray-900 mb-2">
+                Physician Life Care Planning in {stateDisplay}
+              </h2>
+              <p class="text-gray-700 leading-relaxed text-xs sm:text-sm">
+                In {stateDisplay} civil proceedings and catastrophic personal injury litigation, expert evidence must satisfy the admissibility threshold established under <em>R. v. Mohan</em> and {jurisdiction?.standardRuleRef || "provincial civil court rules"}. Board-certified Physician Life Care Planners deliver independent, medically grounded future care assessments to assist {stateDisplay} courts in evaluating lifetime rehabilitation trajectories.
+              </p>
+            </div>
+
+            <div class="border-t border-gray-200 pt-4">
+              <h2 class="text-base font-bold text-gray-900 mb-2">
+                Quantifying Future Medical Costs Outside Public Health Coverage
+              </h2>
+              <p class="text-gray-700 leading-relaxed text-xs sm:text-sm mb-3">
+                While provincial healthcare systems fund foundational acute care, catastrophic injuries impose massive lifetime costs that fall entirely outside public provincial coverage. A Canadian life care plan quantifies essential out-of-pocket medical and supportive services across {majorCitiesList} and surrounding regional districts:
+              </p>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs text-gray-700">
+                <div class="flex items-start gap-2 bg-white p-2.5 rounded-lg border border-gray-200">
+                  <span class="text-brand-600 font-bold">✓</span>
+                  <span><strong>Private Attendant Care:</strong> 24/7 personal support worker (PSW/HCA) hours and private duty nursing exceeding public caps.</span>
+                </div>
+                <div class="flex items-start gap-2 bg-white p-2.5 rounded-lg border border-gray-200">
+                  <span class="text-brand-600 font-bold">✓</span>
+                  <span><strong>Barrier-Free Housing:</strong> Ceiling track lifts, ramps, accessible roll-in bathrooms, and home environmental controls.</span>
+                </div>
+                <div class="flex items-start gap-2 bg-white p-2.5 rounded-lg border border-gray-200">
+                  <span class="text-brand-600 font-bold">✓</span>
+                  <span><strong>Mobility & Accessible Transit:</strong> Power wheelchairs, custom seating, standing frames, and modified accessible vans.</span>
+                </div>
+                <div class="flex items-start gap-2 bg-white p-2.5 rounded-lg border border-gray-200">
+                  <span class="text-brand-600 font-bold">✓</span>
+                  <span><strong>Specialized Therapies:</strong> Private neuro-occupational therapy, physiotherapy, and non-formulary pharmaceuticals.</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </details>
+      )}
+
       <SponsoredBanner />
 
       <!-- City Hubs Section -->
       {cities.length > 0 ? (
         <div class="mb-10">
-          <h2 class="text-xl font-semibold text-gray-900 mb-4">Select a City in {stateDisplay}</h2>
+          <h2 class="text-xl font-semibold text-gray-900 mb-4">{isCanada ? `Select a City / Region in ${stateDisplay}` : `Select a City in ${stateDisplay}`}</h2>
           <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
             {cities.map(({ name, count, physicianCount, displayName }) => (
               <a
@@ -156,9 +245,11 @@ const stateSchema = JSON.stringify({
               <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
             </svg>
           </div>
-          <h2 class="text-xl font-bold text-gray-900 mb-2">Statewide & Regional Expert Witness Services in {stateDisplay}</h2>
+          <h2 class="text-xl font-bold text-gray-900 mb-2">{isCanada ? `Provincial & Regional Expert Witness Services in ${stateDisplay}` : `Statewide & Regional Expert Witness Services in ${stateDisplay}`}</h2>
           <p class="text-sm text-gray-600 max-w-2xl mx-auto mb-5 leading-relaxed">
-            Board-certified Physician Life Care Planners provide comprehensive medical record analysis, tele-rehabilitation evaluations, independent medical evaluations (IMEs), and in-person deposition and trial testimony throughout {stateDisplay}, including major metropolitan centers.
+            {isCanada
+              ? `Board-certified Physician Life Care Planners provide comprehensive medical record analysis, tele-rehabilitation evaluations, independent medical evaluations (IMEs), and cross-border deposition and trial testimony throughout ${stateDisplay}, including major metropolitan centers.`
+              : `Board-certified Physician Life Care Planners provide comprehensive medical record analysis, tele-rehabilitation evaluations, independent medical evaluations (IMEs), and in-person deposition and trial testimony throughout ${stateDisplay}, including major metropolitan centers.`}
           </p>
           <div class="flex flex-wrap justify-center gap-2 mb-6">
             {jurisdiction?.majorCities?.map((cityName) => (

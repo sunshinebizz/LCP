@@ -36,6 +36,7 @@ const ogImageUrl = image || `${siteUrl}/og-image.png`;
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content={description} />
+    <meta name="google-site-verification" content="PEvPgfY6VC4utiP3Nug4b-S6TBkTvvYzwOVd9EgwM80" />
     <title>{title}</title>
     
     <!-- Open Graph / Social Media -->
@@ -69,6 +70,8 @@ const ogImageUrl = image || `${siteUrl}/og-image.png`;
   </head>
   <body class="min-h-screen flex flex-col">
     <slot />
+    <!-- Metricool Tracking Pixel -->
+    <img src="https://tracker.metricool.com/c3po.jpg?hash=e3992c56f278dc28435a36dc94f39eee" alt="" aria-hidden="true" style="display:none;" />
   </body>
 </html>
 

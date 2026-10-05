@@ -6,6 +6,7 @@ export interface JurisdictionData {
   standardRuleRef: string;
   majorCities: string[];
   legalSummary: string;
+  wikipediaUrl?: string;
 }
 
 export const jurisdictions: Record<string, JurisdictionData> = {
@@ -563,10 +564,82 @@ export const jurisdictions: Record<string, JurisdictionData> = {
   }
 };
 
+export const jurisdictionWikipediaMap: Record<string, string> = {
+  // 50 US States + DC + VI
+  alabama: 'https://en.wikipedia.org/wiki/Alabama',
+  alaska: 'https://en.wikipedia.org/wiki/Alaska',
+  arizona: 'https://en.wikipedia.org/wiki/Arizona',
+  arkansas: 'https://en.wikipedia.org/wiki/Arkansas',
+  california: 'https://en.wikipedia.org/wiki/California',
+  colorado: 'https://en.wikipedia.org/wiki/Colorado',
+  connecticut: 'https://en.wikipedia.org/wiki/Connecticut',
+  delaware: 'https://en.wikipedia.org/wiki/Delaware',
+  'district-of-columbia': 'https://en.wikipedia.org/wiki/Washington,_D.C.',
+  florida: 'https://en.wikipedia.org/wiki/Florida',
+  georgia: 'https://en.wikipedia.org/wiki/Georgia_(U.S._state)',
+  hawaii: 'https://en.wikipedia.org/wiki/Hawaii',
+  idaho: 'https://en.wikipedia.org/wiki/Idaho',
+  illinois: 'https://en.wikipedia.org/wiki/Illinois',
+  indiana: 'https://en.wikipedia.org/wiki/Indiana',
+  iowa: 'https://en.wikipedia.org/wiki/Iowa',
+  kansas: 'https://en.wikipedia.org/wiki/Kansas',
+  kentucky: 'https://en.wikipedia.org/wiki/Kentucky',
+  louisiana: 'https://en.wikipedia.org/wiki/Louisiana',
+  maine: 'https://en.wikipedia.org/wiki/Maine',
+  maryland: 'https://en.wikipedia.org/wiki/Maryland',
+  massachusetts: 'https://en.wikipedia.org/wiki/Massachusetts',
+  michigan: 'https://en.wikipedia.org/wiki/Michigan',
+  minnesota: 'https://en.wikipedia.org/wiki/Minnesota',
+  mississippi: 'https://en.wikipedia.org/wiki/Mississippi',
+  missouri: 'https://en.wikipedia.org/wiki/Missouri',
+  montana: 'https://en.wikipedia.org/wiki/Montana',
+  nebraska: 'https://en.wikipedia.org/wiki/Nebraska',
+  nevada: 'https://en.wikipedia.org/wiki/Nevada',
+  'new-hampshire': 'https://en.wikipedia.org/wiki/New_Hampshire',
+  'new-jersey': 'https://en.wikipedia.org/wiki/New_Jersey',
+  'new-mexico': 'https://en.wikipedia.org/wiki/New_Mexico',
+  'new-york': 'https://en.wikipedia.org/wiki/New_York_(state)',
+  'north-carolina': 'https://en.wikipedia.org/wiki/North_Carolina',
+  'north-dakota': 'https://en.wikipedia.org/wiki/North_Dakota',
+  ohio: 'https://en.wikipedia.org/wiki/Ohio',
+  oklahoma: 'https://en.wikipedia.org/wiki/Oklahoma',
+  oregon: 'https://en.wikipedia.org/wiki/Oregon',
+  pennsylvania: 'https://en.wikipedia.org/wiki/Pennsylvania',
+  'rhode-island': 'https://en.wikipedia.org/wiki/Rhode_Island',
+  'south-carolina': 'https://en.wikipedia.org/wiki/South_Carolina',
+  'south-dakota': 'https://en.wikipedia.org/wiki/South_Dakota',
+  tennessee: 'https://en.wikipedia.org/wiki/Tennessee',
+  texas: 'https://en.wikipedia.org/wiki/Texas',
+  utah: 'https://en.wikipedia.org/wiki/Utah',
+  vermont: 'https://en.wikipedia.org/wiki/Vermont',
+  virginia: 'https://en.wikipedia.org/wiki/Virginia',
+  washington: 'https://en.wikipedia.org/wiki/Washington_(state)',
+  'west-virginia': 'https://en.wikipedia.org/wiki/West_Virginia',
+  wisconsin: 'https://en.wikipedia.org/wiki/Wisconsin',
+  wyoming: 'https://en.wikipedia.org/wiki/Wyoming',
+  vi: 'https://en.wikipedia.org/wiki/United_States_Virgin_Islands',
+
+  // Canadian Provinces
+  alberta: 'https://en.wikipedia.org/wiki/Alberta',
+  'british-columbia': 'https://en.wikipedia.org/wiki/British_Columbia',
+  manitoba: 'https://en.wikipedia.org/wiki/Manitoba',
+  'new-brunswick': 'https://en.wikipedia.org/wiki/New_Brunswick',
+  'newfoundland-and-labrador': 'https://en.wikipedia.org/wiki/Newfoundland_and_Labrador',
+  'nova-scotia': 'https://en.wikipedia.org/wiki/Nova_Scotia',
+  ontario: 'https://en.wikipedia.org/wiki/Ontario',
+  quebec: 'https://en.wikipedia.org/wiki/Quebec',
+  saskatchewan: 'https://en.wikipedia.org/wiki/Saskatchewan',
+};
+
 export function getAllJurisdictionSlugs(): string[] {
   return Object.keys(jurisdictions);
 }
 
 export function getJurisdiction(slug: string): JurisdictionData | undefined {
-  return jurisdictions[slug];
+  const data = jurisdictions[slug];
+  if (!data) return undefined;
+  return {
+    ...data,
+    wikipediaUrl: data.wikipediaUrl || jurisdictionWikipediaMap[slug] || `https://en.wikipedia.org/wiki/${encodeURIComponent(data.name.replace(/ /g, '_'))}`
+  };
 }

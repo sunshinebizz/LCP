@@ -17,6 +17,9 @@ Thumbs.db
 .vscode/
 .idea/
 
+# Internal Tooling
+.kiro/
+
 # Python
 __pycache__/
 *.pyc
@@ -32,7 +35,7 @@ scripts/venv/
 # Markdown docs (internal)
 *.md
 !README.md
-!TASKS.md
+TASKS.md
 
 # Excel / CSV data files
 *.xlsx
