@@ -8,3 +8,6 @@
 # Old life-care-planners directory redirects
 /life-care-planners/* /physician-life-care-planners/:splat 301
 /life-care-planners /physician-life-care-planners 301
+
+# Sitemap fallback rewrite
+/sitemap.xml /sitemap-index.xml 200

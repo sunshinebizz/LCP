@@ -33,6 +33,13 @@ export function validateSitemapIntegration() {
         } else {
           console.warn('[Sitemap Validator] ⚠️ Warning: No URLs found in generated sitemap files!');
         }
+
+        // Create sitemap.xml fallback copy for direct browser visits
+        const sitemapLegacyPath = path.join(distDir, 'sitemap.xml');
+        if (fs.existsSync(sitemapIndexPath)) {
+          fs.copyFileSync(sitemapIndexPath, sitemapLegacyPath);
+          console.log('[Sitemap Validator] ✓ Created sitemap.xml fallback alias.');
+        }
       }
     }
   };
