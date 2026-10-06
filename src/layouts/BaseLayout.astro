@@ -24,13 +24,13 @@ const ogImageUrl = image || `${siteUrl}/og-image.png`;
 <html lang="en">
   <head>
     <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-20W50P1CW5"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-20WS0P1CWS"></script>
     <script is:inline>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
 
-      gtag('config', 'G-20W50P1CW5');
+      gtag('config', 'G-20WS0P1CWS');
     </script>
 
     <meta charset="UTF-8" />
@@ -70,8 +70,6 @@ const ogImageUrl = image || `${siteUrl}/og-image.png`;
   </head>
   <body class="min-h-screen flex flex-col">
     <slot />
-    <!-- Metricool Tracking Pixel -->
-    <img src="https://tracker.metricool.com/c3po.jpg?hash=e3992c56f278dc28435a36dc94f39eee" alt="" aria-hidden="true" style="display:none;" />
   </body>
 </html>
 
