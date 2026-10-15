@@ -22,6 +22,7 @@ The Physician Life Care Planning Directory is a specialized, open-access public 
 - **Physician vs. Nurse Life Care Planner**: `https://mylifecareplanning.com/physician-vs-nurse-life-care-planner`
 - **Life Care Plan Costs**: `https://mylifecareplanning.com/how-much-does-a-life-care-plan-cost`
 - **Attorney Timing Guide**: `https://mylifecareplanning.com/when-should-an-attorney-order-a-life-care-plan`
+- **Blog (articles on expert witness standards, cost projections, and case types)**: `https://mylifecareplanning.com/blog/` (RSS: `https://mylifecareplanning.com/rss.xml`)
 - **About Directory & Methodology**: `https://mylifecareplanning.com/about`
 
 ## Legal Standards & Compliance Standards Cited

@@ -1,0 +1,29 @@
+---
+import { formatDate, readingTime, type BlogPost } from "../utils/blog";
+
+interface Props {
+  post: BlogPost;
+}
+
+const { post } = Astro.props;
+const { title, description, date, tags, draft } = post.data;
+---
+
+<article class="card p-6 flex flex-col">
+  <div class="flex items-center gap-2 text-xs text-gray-500 mb-2">
+    <time datetime={date.toISOString()}>{formatDate(date)}</time>
+    <span aria-hidden="true">·</span>
+    <span>{readingTime(post.body)} min read</span>
+    {draft && <span class="ml-auto rounded bg-amber-100 px-2 py-0.5 font-semibold text-amber-800">Draft</span>}
+  </div>
+  <h2 class="text-xl font-bold text-brand-900 leading-snug">
+    <a href={`/blog/${post.slug}/`} class="hover:text-brand-700 transition-colors">{title}</a>
+  </h2>
+  <p class="mt-2 text-gray-600 text-sm leading-relaxed flex-1">{description}</p>
+  {tags.length > 0 && (
+    <ul class="mt-4 flex flex-wrap gap-2">
+      {tags.map((tag) => <li class="rounded-full bg-brand-50 px-2.5 py-0.5 text-xs font-medium text-brand-800">{tag}</li>)}
+    </ul>
+  )}
+  <a href={`/blog/${post.slug}/`} class="mt-4 text-sm font-medium text-brand-700 hover:text-brand-800">Read article →</a>
+</article>

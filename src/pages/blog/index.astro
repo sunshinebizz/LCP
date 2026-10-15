@@ -1,0 +1,75 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Header from "../../components/Header.astro";
+import Footer from "../../components/Footer.astro";
+import BlogCard from "../../components/BlogCard.astro";
+import { SITE_NAME, SITE_URL, getPublishedPosts, postUrl } from "../../utils/blog";
+
+const posts = await getPublishedPosts();
+
+const guides = [
+  { title: "What is life care planning?", href: "/what-is-life-care-planning" },
+  { title: "What is a physician life care plan?", href: "/what-is-a-physician-life-care-plan" },
+  { title: "What is a physician life care planner?", href: "/what-is-a-physician-life-care-planner" },
+  { title: "Physician vs. nurse life care planner", href: "/physician-vs-nurse-life-care-planner" },
+  { title: "How much does a life care plan cost?", href: "/how-much-does-a-life-care-plan-cost" },
+  { title: "When should an attorney order a life care plan?", href: "/when-should-an-attorney-order-a-life-care-plan" },
+  { title: "Who are life care planners?", href: "/who-are-life-care-planners" },
+];
+
+const schema = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "Blog",
+  name: `${SITE_NAME} Blog`,
+  description: "Articles on physician life care planning, expert witness standards, and future care cost projections for attorneys and healthcare teams.",
+  url: `${SITE_URL}/blog/`,
+  publisher: { "@type": "Organization", name: SITE_NAME },
+  blogPost: posts
+    .filter((p) => !p.data.draft)
+    .map((p) => ({
+      "@type": "BlogPosting",
+      headline: p.data.title,
+      url: postUrl(p.slug),
+      datePublished: p.data.date.toISOString(),
+    })),
+});
+---
+
+<BaseLayout
+  title="Life Care Planning Blog — MyLifeCarePlanning.com"
+  description="Articles on physician life care planning, expert witness standards, and future care cost projections for attorneys and healthcare teams."
+  canonical={`${SITE_URL}/blog/`}
+  schema={schema}
+>
+  <Header />
+  <main class="flex-1">
+    <section class="bg-brand-900 text-white">
+      <div class="page-container py-12">
+        <h1 class="text-3xl sm:text-4xl font-bold">Life Care Planning Blog</h1>
+        <p class="mt-3 text-brand-200 max-w-2xl">Practical articles on physician life care plans, expert witness standards, and future care cost projections for attorneys, adjusters, and healthcare teams.</p>
+      </div>
+    </section>
+
+    <div class="page-container section-padding">
+      {posts.length > 0 ? (
+        <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {posts.map((post) => <BlogCard post={post} />)}
+        </div>
+      ) : (
+        <p class="text-gray-600">New articles are on the way. In the meantime, start with the guides below.</p>
+      )}
+
+      <section class="mt-16" aria-labelledby="guides-heading">
+        <h2 id="guides-heading" class="text-2xl font-bold text-brand-900 mb-4">Foundational Guides</h2>
+        <ul class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          {guides.map((g) => (
+            <li>
+              <a href={g.href} class="card block p-4 text-sm font-medium text-brand-800 hover:text-brand-700">{g.title} →</a>
+            </li>
+          ))}
+        </ul>
+      </section>
+    </div>
+  </main>
+  <Footer />
+</BaseLayout>

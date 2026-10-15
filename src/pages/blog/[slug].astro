@@ -1,0 +1,16 @@
+---
+import BlogPostLayout from "../../layouts/BlogPostLayout.astro";
+import { getPublishedPosts, readingTime } from "../../utils/blog";
+
+export async function getStaticPaths() {
+  const posts = await getPublishedPosts();
+  return posts.map((post) => ({ params: { slug: post.slug }, props: { post } }));
+}
+
+const { post } = Astro.props;
+const { Content } = await post.render();
+---
+
+<BlogPostLayout post={post} minutes={readingTime(post.body)}>
+  <Content />
+</BlogPostLayout>

@@ -36,6 +36,8 @@ scripts/venv/
 *.md
 !README.md
 TASKS.md
+# ...but blog posts are site content
+!src/content/**/*.md
 
 # Excel / CSV data files
 *.xlsx

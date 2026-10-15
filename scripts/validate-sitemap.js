@@ -37,6 +37,7 @@ const expectedUrls = new Set();
 const staticPages = [
   '/',
   '/about/',
+  '/blog/',
   '/physician-life-care-planners/',
   '/what-is-life-care-planning/',
   '/what-is-a-physician-life-care-planner/',
